@@ -1,9 +1,10 @@
 import discord
 import sys, traceback
+import os
 from discord.ext import commands
 from discord.ext.commands import Bot
 
-initial_extensions = ["modules.dt-module_kick", "modules.dt-module_ban"]
+initial_extensions = ["modules.dt-module_kick", "modules.dt-module_ban", "modules.dt-module_roll"]
 
 bot = commands.Bot(command_prefix='!')
 
@@ -16,6 +17,8 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Failed to load extension {extension}.", file=sys.stderr)
             traceback.print_exc()
+
+print("logging in....")
 
 @bot.event
 async def on_ready():
