@@ -4,7 +4,11 @@ import os
 from discord.ext import commands
 from discord.ext.commands import Bot
 
-initial_extensions = ["modules.dt-module_kick", "modules.dt-module_ban", "modules.dt-module_roll"]
+#Our list of extensions. Ideally this would be pulled from a file
+initial_extensions = ["modules.dt-module_kick",
+                        "modules.dt-module_ban",
+                        "modules.dt-module_roll"
+                    ]
 
 bot = commands.Bot(command_prefix='!')
 

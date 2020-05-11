@@ -22,7 +22,8 @@ class banModule(commands.Cog):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
-#####  UNBAN CURRENTLY BROKEN -- DOES NOT WORK  #####
+#####    UNBAN CURRENTLY BROKEN -- DOES NOT WORK   #####
+#####  Likely will require SQL Server to function  #####
 '''
     @commands.command(pass_context = True)
     async def unban(self, ctx, id: int):

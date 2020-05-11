@@ -5,18 +5,34 @@ from discord.ext.commands import Bot
 import random
 import array
 
+'''
+Our Dice rolling module
+
+Currently allows for up to 99 virutal dice of any size to be rolled
+'''
+
 class rollModule(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def roll(self, ctx, dice):
-        if dice[0] == 'd' or dice[0] == 'D':
+    async def roll(self, ctx, dice = "roll"):
+        if dice == "roll":
+            rand = random.randint(1, 6)
+            await ctx.send(f"1x d6: {rand}")
+            embed=discord.Embed(title=f"{rand}:")
+            embed.add_field(name=f"1x d6", value=f"{rand}", inline=False)
+            await ctx.channel.send(embed=embed)
+
+        if dice[0] == 'd' or dice[0] == 'D': #check for one die
             num = int(dice[1:])
             rand = random.randint(1, num)
-            await ctx.send(f"1x d{num}: {rand}")
-        if dice[0] != 'd' or dice[0] != 'D':
-            if dice[1] == 'd' or dice[1] == 'D':
+            embed=discord.Embed(title=f"{rand}:")
+            embed.add_field(name=f"1x d{num}", value=f"{rand}", inline=False)
+            await ctx.channel.send(embed=embed)
+            
+        if dice[0] != 'd' or dice[0] != 'D':  #check for multiple Dice
+            if dice[1] == 'd' or dice[1] == 'D':  #xdyy, where x is the number of dice
                 numDice = int(dice[0])
                 num = int(dice[2:])
                 numArray = [0] * numDice
@@ -27,9 +43,11 @@ class rollModule(commands.Cog):
                         rand = randNum
                     else:
                         rand += randNum
-                await ctx.send(f"{numDice}x d{num}: {rand}   {numArray}")
+                embed=discord.Embed(title=f"{rand}")
+                embed.add_field(name=f"{numDice}x d{num}: {rand}", value=f"{numArray}", inline=False)
+                await ctx.channel.send(embed=embed)
 
-            if dice[2] == 'd' or dice[2] == 'D':
+            if dice[2] == 'd' or dice[2] == 'D':  #xxdyy, where x is the number of dice
                 numDice = int(dice[0:2])
                 num = int(dice[3:])
                 numArray = [0] * numDice
@@ -40,7 +58,9 @@ class rollModule(commands.Cog):
                         rand = randNum
                     else:
                         rand += randNum
-                await ctx.send(f"{numDice}x d{num}: {rand}   {numArray}")
+                embed=discord.Embed(title=f"{rand}")
+                embed.add_field(name=f"{numDice}x d{num}: {rand}", value=f"{numArray}", inline=False)
+                await ctx.channel.send(embed=embed)
 
 
 def setup(bot):
