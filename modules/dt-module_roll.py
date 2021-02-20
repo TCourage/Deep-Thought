@@ -60,6 +60,16 @@ class rollModule(commands.Cog):
                 embed.add_field(name=f"{numDice}x d{num}: {rand}", value=f"{numArray}", inline=False)
                 await ctx.channel.send(embed=embed)
 
+    @commands.command(pass_context = True)
+    async def flip(self, ctx, command = "flip"):
+        rand = random.randint(1, 2)
+        embed=discord.Embed(title="Coin flip")
+        if rand == 1:
+            embed.add_field(name="Result:", value="Heads")
+        elif rand == 2:
+            embed.add_field(name="Result:", value="Tails")
+        await ctx.channel.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(rollModule(bot))
