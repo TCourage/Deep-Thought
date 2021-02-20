@@ -1,14 +1,15 @@
 import discord
 from discord import User
 from discord.ext import commands
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, has_permissions, CheckFailure
 
 class banModule(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(pass_context = True)
-    async def ban(self, ctx, user_name: discord.User, days = 1, reason = "reasons"):
+    @commands.has_permissions(ban_members=True)
+    async def ban(self, ctx, user_name: discord.Member, days = 1, reason = "reasons"):
         if user_name == None or user_name == ctx.message.author:
             await ctx.send("You cannot ban yourself")
             return
@@ -22,6 +23,10 @@ class banModule(commands.Cog):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
+    @ban.error
+    async def ban_error(error, ctx, user_name: discord.Member):
+        if isinstance(error, CheckFailure):
+            await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 #####    UNBAN CURRENTLY BROKEN -- DOES NOT WORK   #####
 #####  Likely will require SQL Server to function  #####
 '''
