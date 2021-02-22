@@ -14,6 +14,7 @@ Getting started with Deep Thought;
 
 1. You must be either the server owner, or an administrator to add the bot to the server.
 1. You will need to setup a new [Discord Bot Application](https://discord.com/developers/applications). Your bot will require Admin privileges to operate properly, if you prefer your bot to not have admin roles we recommend removing the kick and ban modules, following the 'Adding Extensions' section below in reverse.
+1. To ensure the database works correctly, please ensure you enable both Presence Intent and Server Members Intents under the `bot` tab.
 1. Once your bot is created, you will want to navigate to the OAuth2 tab and get an invite link, set the Scopes to `bot` and Permissions to `Administrator`, copy the link, paste in a new tab, and add your bot to the server of your choice.
 1. Next go back to the Bot tab, and under the Username, click to reveal your token, and keep note of it (but keep it safe and secret!).
 1. Now you can clone this git repository. Create a new file at the root of it called `token`, and paste your bot's token. Save this file but keep it secret - it will be used to authenticate and log the bot in - anyone who has access to this file or the key can do malicious things on your server.

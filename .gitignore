@@ -2,3 +2,4 @@ __pycache__/
 token
 extra-extensions.txt
 beaver_express/
+*.db

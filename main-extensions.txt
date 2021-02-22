@@ -1,3 +1,4 @@
 modules.dt-module_ban
 modules.dt-module_kick
 modules.dt-module_roll
+modules.dt-module_db

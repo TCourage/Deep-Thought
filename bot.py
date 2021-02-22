@@ -1,6 +1,9 @@
-import discord, sys, traceback, os
+import discord, sys, traceback, os, sqlite3
 from discord.ext import commands
 from discord.ext.commands import Bot
+
+server_db = sqlite3.connect('server.db')
+c = server_db.cursor()
 
 #Our list of extensions - now pulled from files!
 try:
@@ -16,8 +19,8 @@ try:
 except FileNotFoundError:
     extra_extensions = []
 
-
-bot = commands.Bot(command_prefix='^')
+intents = discord.Intents().all()
+bot = commands.Bot(command_prefix='^', intents=intents)
 
 #Load our extensions
 if __name__ == "__main__":
@@ -53,11 +56,24 @@ if __name__ == "__main__":
     else:
         print("No extra extensions found, skipping...")
 
+
 print("--------------------\nlogging in....\n--------------------")
 
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}\n--------------------\n'.format(bot))
+    print("--------------------\nChecking db status...\n")
+    try:
+        c.execute('''SELECT * FROM users;''')
+        print("Using existing database")
+        print("Ready.")
+    except:
+        print("Creating new DB, please run the 'setup' command on the server to populate.")
+        c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text, strikes int, banned int);''')
+    server_db.commit()
+    server_db.close()
+        
+
 
 #This reads our token from the token file. This is ideal for security purposes when open-
 #sourcing a project like this and keeping modularity.
