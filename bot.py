@@ -1,3 +1,22 @@
+################    DEEP THOUGHT    ################
+#                                                  #
+# Deep Thought - the modular, open-source, self-   #
+# hosted Discord bot that does what you need it to #
+# do. Please ensure you have discord.py installed  #
+# for the bot to operate correctly.                #
+#                                                  #
+# This code and all so-called "main extensions"    #
+# remain the sole property of the owner of the     #
+# original GitHub repository, and are free for use #
+# and modification, so long as said repository is  #
+# linked back to with your final product.          #
+#                                                  #
+#                                                  #
+#                                                  #
+# Version 0.4.1                                    #
+####################################################
+
+
 import discord, sys, traceback, os, sqlite3
 from discord.ext import commands
 from discord.ext.commands import Bot
@@ -69,7 +88,7 @@ async def on_ready():
         print("Ready.")
     except:
         print("Creating new DB, please run the 'setup' command on the server to populate.")
-        c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text, strikes int, banned int);''')
+        c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text, kicks int, strikes int, banned int);''')
     server_db.commit()
     server_db.close()
         
