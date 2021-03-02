@@ -20,6 +20,10 @@ Getting started with Deep Thought;
 1. Now you can clone this git repository. Create a new file at the root of it called `token`, and paste your bot's token. Save this file but keep it secret - it will be used to authenticate and log the bot in - anyone who has access to this file or the key can do malicious things on your server.
 1. With the token in place, you can now run `python3 bot.py` in the root of the directory. The bot will load any extensions, and log in. To verify the bot is working simply run `|help` in your server and you should receive a response.
 
+##### Note for macOS Users
+
+Something in the way Python interacts with macOS prevents SSL certificates from being used without first importing them. In order for the bot to log in, we must first install the required SSL certs to the Python library paths. Fortunately, this is very simple. If you installed Python from the website using a .pkg, navigate to `/Applications/Python 3.x` and run `Install Certificates.command`. If you installed Python using Brew or Ports, run `pip install --upgrade certificates`. Once this is finished the bot will run and successfully login.
+
 ### Adding Extensions
 
 If you would like to add your own extensions to Deep Thought, please follow the guide below. It is a relatively simple process.
