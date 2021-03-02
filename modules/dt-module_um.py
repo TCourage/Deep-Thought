@@ -34,8 +34,9 @@ class umModule(commands.Cog):
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
     @ban.error
-    async def ban_error(error, ctx, user_name: discord.Member):
+    async def ban_error(self, ctx, error):
         if isinstance(error, CheckFailure):
+            messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
     
 
@@ -47,8 +48,9 @@ class umModule(commands.Cog):
         await ctx.send(f"{user_name} was kicked for {reason}")
     
     @kick.error
-    async def kick_error(error, ctx, user_name: discord.Member, reason = "lol"):
+    async def kick_error(self, ctx, error):
         if isinstance(error, CheckFailure):
+            messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
 
