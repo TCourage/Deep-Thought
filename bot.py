@@ -39,7 +39,7 @@ except FileNotFoundError:
     extra_extensions = []
 
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix='^', intents=intents)
+bot = commands.Bot(command_prefix='|', intents=intents)
 
 #Load our extensions
 if __name__ == "__main__":
