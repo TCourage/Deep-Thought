@@ -46,7 +46,7 @@ class dbLaunch(commands.Cog):
                     except:
                         print("Error inserting user {} in database".format(users[1]))
                 else:
-                    #try:
+                    try:
                         c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
                         c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', 0, 0, 0, 0)
                         print("User {} successfully added to the database;".format(users[1]))
