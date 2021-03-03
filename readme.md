@@ -13,14 +13,14 @@ Deep Thought is exactly what the subtitle suggests - it's a modular, self-hosted
 Getting started with Deep Thought;
 
 1. You must be either the server owner, or an administrator to add the bot to the server.
-1. You will need to setup a new [Discord Bot Application](https://discord.com/developers/applications). Your bot will require Admin privileges to operate properly, if you prefer your bot to not have admin roles we recommend removing the kick and ban modules, following the 'Adding Extensions' section below in reverse.
+1. You will need to setup a new [Discord Bot Application](https://discord.com/developers/applications). Your bot will require Admin privileges to operate properly.
 1. To ensure the database works correctly, please ensure you enable both Presence Intent and Server Members Intents under the `bot` tab.
 1. Once your bot is created, you will want to navigate to the OAuth2 tab and get an invite link, set the Scopes to `bot` and Permissions to `Administrator`, copy the link, paste in a new tab, and add your bot to the server of your choice.
 1. Next go back to the Bot tab, and under the Username, click to reveal your token, and keep note of it (but keep it safe and secret!).
-1. Now you can clone this git repository. Create a new file at the root of it called `token`, and paste your bot's token. Save this file but keep it secret - it will be used to authenticate and log the bot in - anyone who has access to this file or the key can do malicious things on your server.
-1. With the token in place, you can now run `python3 bot.py` in the root of the directory. The bot will load any extensions, and log in. To verify the bot is working simply run `|help` in your server and you should receive a response.
+1. Now you can clone this git repository. On first launch you will be prompted to enter the token you obtained in the previous step, then a command prefix. The prefix is whatever you want to use to "signal" the bot to listen to your command (i.e. if you want to run Deep Thought commands like `?kick` or `!ban` you would enter `?` or `!` at this step)
+1. With the token in place, you can now run `python3 bot.py` in the root of the directory. The bot will load any extensions, and log in. To verify the bot is working simply run `prefix+help` in your server and you should receive a response.
 
-##### Note for macOS Users
+#### Note for macOS Users
 
 Something in the way Python interacts with macOS prevents SSL certificates from being used without first importing them. In order for the bot to log in, we must first install the required SSL certs to the Python library paths. Fortunately, this is very simple. If you installed Python from the website using a .pkg, navigate to `/Applications/Python 3.x` and run `Install Certificates.command`. If you installed Python using Brew or Ports, run `pip install --upgrade certificates`. Once this is finished the bot will run and successfully login.
 
