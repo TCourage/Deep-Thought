@@ -17,7 +17,7 @@ Getting started with Deep Thought;
 1. To ensure the database works correctly, please ensure you enable both Presence Intent and Server Members Intents under the `bot` tab.
 1. Once your bot is created, you will want to navigate to the OAuth2 tab and get an invite link, set the Scopes to `bot` and Permissions to `Administrator`, copy the link, paste in a new tab, and add your bot to the server of your choice.
 1. Next go back to the Bot tab, and under the Username, click to reveal your token, and keep note of it (but keep it safe and secret!).
-1. Now you can clone this git repository. On first launch you will be prompted to enter the token you obtained in the previous step, then a command prefix. The prefix is whatever you want to use to "signal" the bot to listen to your command (i.e. if you want to run Deep Thought commands like `?kick` or `!ban` you would enter `?` or `!` at this step)
+1. Now you can clone this git repository. On first launch you will be prompted to enter the token you obtained in the previous step, then a command prefix. The prefix is whatever you want to use to "signal" the bot to listen to your command (i.e. if you want to run Deep Thought commands like `?kick` or `#ban` you would enter `?` or `#` at this step). Default is `!`.
 1. With the token in place, you can now run `python3 bot.py` in the root of the directory. The bot will load any extensions, and log in. To verify the bot is working simply run `prefix+help` in your server and you should receive a response.
 
 #### Note for macOS Users

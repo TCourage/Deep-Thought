@@ -49,7 +49,9 @@ try:
     print (f"Token found! Using. Server prefix is {prefix}\n----------------------------------------")
 except:
     token = input("No token found! Please paste your bot token here: ")
-    prefix = input("Please select a command prefix. i.e. if you want your commands to be '!kick' you would enter '!'")
+    prefix = input("Please select a command prefix. Default is '!'  ")
+    if not prefix:
+        prefix = '!'
     s.execute('''INSERT INTO server (token, prefix) VALUES (?,?);''', (token, prefix))
     print ("Token and prefix successfully added to DB, will attempt login\n----------------------------------------")
 
