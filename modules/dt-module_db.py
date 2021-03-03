@@ -164,6 +164,13 @@ class dbLaunch(commands.Cog):
                         changes += 1
                     except:
                         print("Error editing user {}".format(users[1]))
+                elif users[1] != row[1] and users[1] != None:
+                    try:
+                        c.execute('''INSERT INTO users (name) VALUES (?);''', users[1])
+                        print("User {} updated successfully".format(users[1]))
+                        changes += 1
+                    except:
+                        print("Error editing user {}".format(users[1]))
                 else:
                     print("User {} already in database and no changes to be made, skipping...".format(users[1]))
         print("--------------------------------")
