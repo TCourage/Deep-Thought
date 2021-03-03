@@ -106,9 +106,6 @@ class umModule(commands.Cog):
         num_strikes = c.fetchone()  #fetches the SQL row
         strikes = num_strikes[0] #create a variable to hold the number of strikes
         bans = num_strikes[1] #variable to hold number of bans
-        print (user_name.id)
-        print (strikes)
-        print (bans)
         
         if user_name == ctx.message.author:  #Prevent user from giving themself strikes
             await ctx.send("You cannot give yourself strikes")
