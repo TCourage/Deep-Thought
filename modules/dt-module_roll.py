@@ -9,11 +9,11 @@ Our Dice rolling module
 Currently allows for up to 99 virutal dice of any size to be rolled
 '''
 
-class rollModule(commands.Cog):
+class Dice_Coin_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context = True)
+    @commands.command(pass_context = True, cog = "Dice/Coin Module", description = "Roll some dice! You can roll up to 99 of any sided die you want.", help = "[roll xxdyy] - where xx is the number of dice (1-99) and yy is the number of sides per die.", brief = "Roll *xx*d*yy* dice.")
     async def roll(self, ctx, dice = "roll"):
         if dice == "roll":
             rand = random.randint(1, 6)
@@ -60,7 +60,7 @@ class rollModule(commands.Cog):
                 embed.add_field(name=f"{numDice}x d{num}: {rand}", value=f"{numArray}", inline=False)
                 await ctx.channel.send(embed=embed)
 
-    @commands.command(pass_context = True)
+    @commands.command(pass_context = True, description = "Flip a coin! Heads or tails. Only does one coin.", help = "[flip]", brief = "Flip a coin. ")
     async def flip(self, ctx, command = "flip"):
         rand = random.randint(1, 2)
         embed=discord.Embed(title="Coin flip")
@@ -72,4 +72,4 @@ class rollModule(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(rollModule(bot))
+    bot.add_cog(Dice_Coin_Module(bot))

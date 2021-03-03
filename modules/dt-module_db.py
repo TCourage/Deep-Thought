@@ -8,12 +8,12 @@ from discord.ext.commands import Bot, has_permissions, CheckFailure
 ## I'm trying to keep the bulk of the database operations in this file, if possible.
 # Commands like 'on_join' or 'on_ban' etc. really help.
 
-class dbLaunch(commands.Cog):
+class Database_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     #The update command. This handles when the user runs '|setup' or another alias and updates everything
-    @commands.command(name="setup", aliases=["setupdb", "dbupdate", "update", "updatedb"], pass_context=True)
+    @commands.command(name="setup", aliases=["setupdb", "dbupdate", "update", "updatedb"], pass_context=True, description = "Manually update the server's database, MUST be run at first launch. Also a good idea if the server has been offline for some time. Otherwise, the server will automatically update as soon as someone new joins.", help = "[setup, update, updatedb, dbupdate, setupdb]", brief = "Manually update the database")
     @commands.has_permissions(administrator=True)
     async def setupdb(self, ctx):
         adds = 0
@@ -272,4 +272,4 @@ class dbLaunch(commands.Cog):
 
 
 def setup(bot): #setup and launch bot
-    bot.add_cog(dbLaunch(bot))
+    bot.add_cog(Database_Module(bot))

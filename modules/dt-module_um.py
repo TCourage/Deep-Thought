@@ -12,12 +12,12 @@ from discord import User
 from discord.ext import commands
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 
-class umModule(commands.Cog):
+class UserManagement_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     #Ban module. Code is pretty self-explanitory
-    @commands.command(nam = "ban", pass_context = True)
+    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", help = "[ban @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "BAN PEOPLE")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def ban(self, ctx, user_name: discord.Member, reason = None):
 
@@ -46,7 +46,7 @@ class umModule(commands.Cog):
 
 
     #Kick module. Also pretty self-explanitory
-    @commands.command(name="kick", aliases=["boot", "toss"], pass_context = True)
+    @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", help = "[kick @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "KICK PEOPLE")
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user_name: discord.Member, reason = None):
 
@@ -82,7 +82,7 @@ class umModule(commands.Cog):
 
 
     #Strike module. Gives strikes. Can only be used by people who are allowed to ban
-    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True)
+    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At three strikes, the user is banned from the server.", help = "[strike @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "GIVE PEOPLE STRIKES")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def strike(self, ctx, user_name: discord.Member, reason = None):
 
@@ -103,8 +103,6 @@ class umModule(commands.Cog):
         elif reason != None: #If a reason is given
             strikes += 1 #add to the strike counter
             if strikes == 3:
-                bans += 1
-                c.execute('''UPDATE discipline SET strikes = 0, banned = 1, bans = (?) WHERE id = (?);''', (bans, user_name.id,))
                 await ctx.send(f"{user_name.mention} has received three strikes, and is now banned. (Strike reason: {reason}")
                 await ctx.guild.ban(user_name)
             else:
@@ -114,8 +112,6 @@ class umModule(commands.Cog):
         else: #If a reason is not given
             strikes += 1 #add to the strike counter
             if strikes == 3:
-                bans += 1
-                c.execute('''UPDATE discipline SET strikes = 0, banned = 1, bans = (?) WHERE id = (?);''', (bans, user_name.id,))
                 await ctx.send(f"{user_name.mention} has received three strikes, and is now banned.")
                 await ctx.guild.ban(user_name)
             else:
@@ -135,4 +131,4 @@ class umModule(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(umModule(bot))
+    bot.add_cog(UserManagement_Module(bot))
