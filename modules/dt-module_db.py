@@ -32,7 +32,7 @@ class dbLaunch(commands.Cog):
             
             #This checks the database to see if the user already as an entry,
             #and skips adding them if they do.            
-            c.execute('''SELECT * FROM users WHERE id = ?''', (member.id,))
+            c.execute('''SELECT * FROM users WHERE id = (?);''', (member.id,))
             row = c.fetchone()
             # If the user does not exist, we'll create them and add to the database;
             if row == None:
@@ -119,8 +119,8 @@ class dbLaunch(commands.Cog):
         print("New user {} has joined! Updating database...\n".format(member))
         adds = 0
         changes = 0
-        #Open our DB, create if doesn't exist.
 
+        #Open our DB
         server_db = sqlite3.connect('server.db')
         c = server_db.cursor()
         print("Users added:")
@@ -133,7 +133,7 @@ class dbLaunch(commands.Cog):
             
             #This checks the database to see if the user already as an entry,
             #and skips adding them if they do.            
-            c.execute('''SELECT * FROM users WHERE id=?''', (member.id,))
+            c.execute('''SELECT * FROM users WHERE id = (?);''', (member.id,))
             row = c.fetchone()
             # If the user does not exist, we'll create them and add to the database
             if row == None:
@@ -201,7 +201,44 @@ class dbLaunch(commands.Cog):
         # Write to and close the DB
         server_db.commit()
         server_db.close()
+    
+    # This subroutine automatically updates the DB when a user changes something
+    @commands.Cog.listener("on_member_update")
+    async def member_update(self, before, after):
+        #Open DB
+        if (before.nick != after.nick): #If the nickname changed
+            server_db = sqlite3.connect('server.db')
+            c = server_db.cursor()
+            try: #Do the update
+                c.execute('''UPDATE users SET nick = (?) WHERE id = (?);''', (after.nick, after.id))
+                print (f"User {before.name}#{before.discriminator} ({before.nick}) changed their nick to {after.name}#{after.discriminator} ({after.nick}). Database updated.")
+            except:
+                print (f"User {before.name} changed their profile in some way, but there was an error and the DB was not updated.")
+        elif (before.name != after.name): #If their Discord name changed
+            server_db = sqlite3.connect('server.db')
+            c = server_db.cursor()
+            try: #Do the update
+                c.execute('''UPDATE users SET name = (?) WHERE id = (?);''', (after.name, after.id))
+                print (f"User {before.name}#{before.discriminator} ({before.nick}) changed their name to {after.name}#{after.discriminator} ({after.nick}). Database updated.")
+            except:
+                print (f"User {before.name} changed their profile in some way, but there was an error and the DB was not updated.")
+        elif (before.discriminator != after.discriminator): #If they changed their discriminator
+            server_db = sqlite3.connect('server.db')
+            c = server_db.cursor()
+            try: #Do the update
+                c.execute('''UPDATE users SET discriminator = (?) WHERE id = (?);''', (after.discriminator, after.id))
+                print (f"User {before.name}#{before.discriminator} ({before.nick}) changed their name to {after.name}#{after.discriminator} ({after.nick}). Database updated.")
+            except:
+                print (f"User {before.name} changed their profile in some way, but there was an error and the DB was not updated.")
+        else:
+            return
 
+        
+        # Write to and close the DB
+        server_db.commit()
+        server_db.close()
+
+        
 
 def setup(bot): #setup and launch bot
     bot.add_cog(dbLaunch(bot))
