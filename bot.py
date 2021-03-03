@@ -89,7 +89,7 @@ async def on_ready():
     except:
         print("Creating new DB, please run the 'setup' command on the server to populate.")
         c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
-        c.execute('''CREATE TABLE discipline(strikes int, kicks int, banned int, total bans int);''')
+        c.execute('''CREATE TABLE discipline(strikes int, kicks int, banned int, bans int);''')
     server_db.commit()
     server_db.close()
         

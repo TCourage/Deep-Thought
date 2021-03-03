@@ -35,26 +35,26 @@ class dbLaunch(commands.Cog):
             if row == None:
                 #If the member has no nickname, we'll set it as N/A
                 if member.nick == None:
-                    try:
-                        users = [member.id, member.name, member.discriminator, 'N/A', member.top_role.name]
-                        c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
-                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', 0, 0, 0, 0)
-                        print("User {} successfully added to the database;".format(users[1]))
-                        print(users)
-                        print("--------------------------------")
-                        adds += 1
-                    except:
-                        print("Error inserting user {} in database".format(users[1]))
+                    #try:
+                    users = [member.id, member.name, member.discriminator, 'N/A', member.top_role.name]
+                    c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
+                    c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', [0, 0, 0, 0])
+                    print("User {} successfully added to the database;".format(users[1]))
+                    print(users)
+                    print("--------------------------------")
+                    adds += 1
+                    #except:
+                    #    print("Error inserting user {} in database".format(users[1]))
                 else:
-                    try:
-                        c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
-                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', 0, 0, 0, 0)
-                        print("User {} successfully added to the database;".format(users[1]))
-                        print(users)
-                        print("--------------------------------")
-                        adds += 1
-                    except:
-                        print("Error inserting user {} in database".format(users[1]))
+                    #try:
+                    c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
+                    c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', [0, 0, 0, 0])
+                    print("User {} successfully added to the database;".format(users[1]))
+                    print(users)
+                    print("--------------------------------")
+                    adds += 1
+                    #except:
+                    #    print("Error inserting user {} in database".format(users[1]))
       
 
 
@@ -126,7 +126,7 @@ class dbLaunch(commands.Cog):
                     try:
                         users = [member.id, member.name, member.discriminator, 'N/A', member.top_role.name]
                         c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
-                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', 0, 0, 0, 0)
+                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', [0, 0, 0, 0])
                         print("User {} successfully added to the database;".format(users[1]))
                         print(users)
                         print("--------------------------------")
@@ -136,7 +136,7 @@ class dbLaunch(commands.Cog):
                 else:
                     try:
                         c.execute('''INSERT INTO users (id, name, discriminator, nick, top_role) VALUES (?,?,?,?,?);''', users)
-                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', 0, 0, 0, 0)
+                        c.execute('''INSERT INTO discipline (strikes, kicks, banned, bans) VALUES (?,?,?,?);''', [0, 0, 0, 0])
                         print("User {} successfully added to the database;".format(users[1]))
                         print(users)
                         print("--------------------------------")
