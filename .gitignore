@@ -3,3 +3,4 @@ token
 extra-extensions.txt
 beaver_express/
 *.db
+*.DS_STORE
