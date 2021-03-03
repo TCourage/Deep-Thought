@@ -61,7 +61,7 @@ try:
     c.execute('''SELECT * FROM users;''')
     print("Using existing database\n----------------------------------------")
 except:
-    print("Creating new DB, please run the 'setup' command on the server to populate.")
+    print("Creating new DB, please run the 'setup' command on the server to populate.\n----------------------------------------")
     c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
     c.execute('''CREATE TABLE discipline(id int, strikes int, kicks int, banned int, bans int);''')
 

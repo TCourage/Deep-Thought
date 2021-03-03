@@ -5,6 +5,9 @@ from discord.ext.commands import Bot, has_permissions, CheckFailure
 ## So this is our database management module. It handles updating the database and keeping
 # it updated when new users join.
 
+## I'm trying to keep the bulk of the database operations in this file, if possible.
+# Commands like 'on_join' or 'on_ban' etc. really help.
+
 class dbLaunch(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -123,8 +126,7 @@ class dbLaunch(commands.Cog):
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
-        print("Users added:")
-        print("--------------------------------\n")
+        print("Users added:\n")
         x = member.guild.members
         #If server perms are setup right, this grabs a list of every user on the server
         for member in x:
@@ -239,6 +241,35 @@ class dbLaunch(commands.Cog):
         server_db.close()
 
         
+    #This section triggers when a user is unbanned and updated the database accordingly 
+    @commands.Cog.listener("on_member_unban")
+    async def member_unban(self, guild, member):
+        #Open our DB and edit
+        server_db = sqlite3.connect('users.db')
+        c = server_db.cursor()
+        c.execute('''UPDATE discipline SET banned = 0 WHERE id = (?);''', (member.id,))
+
+        #Write changes and close the DB
+        server_db.commit()
+        server_db.close()
+
+    #This section triggers when a user is banned
+    @commands.Cog.listener("on_member_ban")
+    async def member_ban(self, guild, member):
+        #Open our DB
+        server_db = sqlite3.connect('users.db')
+        c = server_db.cursor()
+        #Get the current number of bans of this user
+        c.execute('''SELECT bans FROM discipline WHERE id = (?);''', (member.id,))
+        row = c.fetchone()
+        bans = row[0]
+        bans += 1 #Update the number of bans, then set
+        c.execute('''UPDATE discipline SET bans = (?), banned = 1 WHERE id = (?);''', (bans, member.id,))
+
+        #Write changes and close the DB
+        server_db.commit()
+        server_db.close()
+
 
 def setup(bot): #setup and launch bot
     bot.add_cog(dbLaunch(bot))

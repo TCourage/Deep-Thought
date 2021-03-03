@@ -21,12 +21,7 @@ class umModule(commands.Cog):
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def ban(self, ctx, user_name: discord.Member, reason = None):
 
-        #Open our DB
-        server_db = sqlite3.connect('users.db')
-        c = server_db.cursor()
-        c.execute('''SELECT bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
-        num_bans = c.fetchone()  #fetches the SQL row
-        bans = num_bans[0] #create a variable to hold the number of bans
+        #All the DB part of this was moved to the DB module
         
         if user_name == ctx.message.author:  #Prevent user from banning themself
             await ctx.send("You cannot ban yourself")
@@ -35,20 +30,11 @@ class umModule(commands.Cog):
             await ctx.send("Please tag someone to ban")
             return
         elif reason != None: #If a reason is given
-            bans += 1 #add to the kick counter
-            c.execute('''UPDATE discipline SET bans = (?) WHERE id = (?);''', (bans, user_name.id,)) #apply kick count
             await ctx.send(f"{user_name.mention} is now banned, reason(s); {reason}")
             await ctx.guild.ban(user_name)
         else: #If a reason is not given
-            bans += 1 #add to the kick counter
-            c.execute('''UPDATE discipline SET bans = (?) WHERE id = (?);''', (bans, user_name.id,)) #apply kick count
             await ctx.send(f"{user_name.mention} is now banned")
             await ctx.guild.ban(user_name)
-
-        #Write changes and close the DB
-        server_db.commit()
-        server_db.close()
-
 
     #If the user doesn't have the permissions to ban people, they're told they can't
     @ban.error
@@ -57,6 +43,7 @@ class umModule(commands.Cog):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
     
+
 
     #Kick module. Also pretty self-explanitory
     @commands.command(name="kick", aliases=["boot", "toss"], pass_context = True)
@@ -138,7 +125,6 @@ class umModule(commands.Cog):
         #Write changes and close the DB
         server_db.commit()
         server_db.close()
-
 
     #If the user doesn't have the permissions to ban people, they're told they can't give strikes either
     @strike.error
