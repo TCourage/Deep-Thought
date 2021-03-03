@@ -21,8 +21,10 @@ import discord, sys, traceback, os, sqlite3
 from discord.ext import commands
 from discord.ext.commands import Bot
 
-server_db = sqlite3.connect('server.db')
+server_db = sqlite3.connect('users.db')  #Access our users database
+server_settings = sqlite3.connect('server.db')  #Access our server settings database
 c = server_db.cursor()
+s = server_settings.cursor()
 
 #Our list of extensions - now pulled from files!
 try:
@@ -51,7 +53,7 @@ if __name__ == "__main__":
     print("| ed this software, to learn more about its   |")
     print("| operation. Have fun!                        |")
     print("|---------------------------------------------|")
-    print ("----------------------------------------------\nLoading main bot extensions...\n")
+    print ("\nLoading main bot extensions...\n")
     if initial_extensions:
         for extension in initial_extensions:
             try:
@@ -73,28 +75,30 @@ if __name__ == "__main__":
                 print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
     else:
-        print("No extra extensions found, skipping...")
+        print("No extra extensions found, skipping")
 
 
-print("--------------------\nlogging in....\n--------------------")
-
+#What the bot runs when it's loaded and ready
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}\n--------------------\n'.format(bot))
-    print("--------------------\nChecking db status...\n")
-    try:
-        c.execute('''SELECT * FROM users;''')
-        print("Using existing database")
-        print("Ready.")
-    except:
-        print("Creating new DB, please run the 'setup' command on the server to populate.")
-        c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
-        c.execute('''CREATE TABLE discipline(id int, strikes int, kicks int, banned int, bans int);''')
-    server_db.commit()
-    server_db.close()
-        
 
+#Checks for databases, creates them if necessary
+print("--------------------\nChecking db status...\n")
+try:
+    c.execute('''SELECT * FROM users;''')
+    print("Using existing database")
+except:
+    print("Creating new DB, please run the 'setup' command on the server to populate.")
+    c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
+    c.execute('''CREATE TABLE discipline(id int, strikes int, kicks int, banned int, bans int);''')
+    s.execute('''CREATE TABLE server(token text, prefix text);''')  # -- Commented out for now. Will revisit.
+server_db.commit()
+server_db.close()
+server_settings.commit()
+server_settings.close()
 
+print("--------------------\nlogging in....\n")
 #This reads our token from the token file. This is ideal for security purposes when open-
 #sourcing a project like this and keeping modularity.
 with open ("token", "r") as tokenFile:

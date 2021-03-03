@@ -22,7 +22,7 @@ class umModule(commands.Cog):
     async def ban(self, ctx, user_name: discord.Member, reason = None):
 
         #Open our DB
-        server_db = sqlite3.connect('server.db')
+        server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
         c.execute('''SELECT bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
         num_bans = c.fetchone()  #fetches the SQL row
@@ -64,7 +64,7 @@ class umModule(commands.Cog):
     async def kick(self, ctx, user_name: discord.Member, reason = None):
 
         #Open our DB
-        server_db = sqlite3.connect('server.db')
+        server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
         c.execute('''SELECT kicks FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
         num_kicks = c.fetchone()  #fetches the SQL row
@@ -100,7 +100,7 @@ class umModule(commands.Cog):
     async def strike(self, ctx, user_name: discord.Member, reason = None):
 
         #Open our DB
-        server_db = sqlite3.connect('server.db')
+        server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
         c.execute('''SELECT strikes, bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of strikes they've gotten before
         num_strikes = c.fetchone()  #fetches the SQL row
