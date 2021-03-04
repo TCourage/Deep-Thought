@@ -8,6 +8,9 @@ from discord.ext.commands import Bot, has_permissions, CheckFailure
 ## I'm trying to keep the bulk of the database operations in this file, if possible.
 # Commands like 'on_join' or 'on_ban' etc. really help.
 
+## I'm also trying to keep commands in the top section of the file, and listeners at the bottom.
+# Keeps things organized better IMO.
+
 class Database_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -113,6 +116,94 @@ class Database_Module(commands.Cog):
         if isinstance(error, CheckFailure):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that. Only administrators may update the database.")
+
+
+    @commands.command(name = "checkdb", aliases = ["querydb", "searchdb", "dbsearch", "dbcheck", "dbquery"], pass_context = True, description = "Check a user's detailed info currently stored in the database.", brief = "Check the database")
+    @commands.has_permissions(administrator=True)
+    async def checkdb(self, ctx, member: discord.Member = None):
+        print ("test")        
+        
+        #Open our DB
+        server_db = sqlite3.connect('users.db')
+        c = server_db.cursor()
+
+
+        if member == ctx.message.author:  #Check your own data
+            c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            print (row)
+            embed=discord.Embed(title=f"Database info for {member.name}:")
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
+            if row[2] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=False)
+            else:
+                embed.add_field(name="Currently banned?", value="Yes", inline=False)
+            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+            await ctx.channel.send(embed=embed)
+        elif member == None: #Also checks your own data
+            member = ctx.message.author
+            c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            embed=discord.Embed(title=f"Database info for {member.name}:")
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
+            if row[2] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=False)
+            else:
+                embed.add_field(name="Currently banned?", value="Yes", inline=False)
+            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+            await ctx.channel.send(embed = embed)
+        else:
+            c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            embed=discord.Embed(title=f"Database info for {member.name}:")
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
+            row = c.fetchone()
+            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
+            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
+            if row[2] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=False)
+            else:
+                embed.add_field(name="Currently banned?", value="Yes", inline=False)
+            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+            await ctx.channel.send(embed = embed)
+
+        #Write changes and close the DB
+        server_db.commit()
+        server_db.close()
+
+    #If a non-admin uses this command, tell the user they're not allowed to do that
+    @checkdb.error
+    async def checkdb_error(self, ctx, error):
+        if isinstance(error, CheckFailure):
+            messageAuthor = ctx.author.mention
+            await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that. Only administrators may query the database.")
+
+
+
+    #######################################################################################################
+    ########################################### LISTENER SECTION ##########################################
+    #######################################################################################################
 
     #This code automatically updates the database when new users join.
     @commands.Cog.listener("on_member_join")
