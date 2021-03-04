@@ -13,8 +13,9 @@ class Dice_Coin_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context = True, cog = "Dice/Coin Module", description = "Roll some dice! You can roll up to 99 of any sided die you want.", help = "[roll xxdyy] - where xx is the number of dice (1-99) and yy is the number of sides per die.", brief = "Roll *xx*d*yy* dice.")
-    async def roll(self, ctx, dice = "roll"):
+    @commands.command(pass_context = True, cog = "Dice/Coin Module", description = "Roll some dice! You can roll up to 99 of any sided die you want.", help = "[xxdyy] - where xx is the number of dice (1-99) and yy is the number of sides per die.", brief = "Roll *xx*d*yy* dice.")
+    async def roll(self, ctx, xxdyy):
+        dice = xxdyy
         if dice == "roll":
             rand = random.randint(1, 6)
             await ctx.send(f"1x d6: {rand}")

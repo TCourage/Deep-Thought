@@ -17,7 +17,7 @@ class UserManagement_Module(commands.Cog):
         self.bot = bot
 
     #Ban module. Code is pretty self-explanitory
-    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", help = "[ban @user reason]", brief = "BAN PEOPLE")
+    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", brief = "BAN PEOPLE")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def ban(self, ctx, user_name: discord.Member, *, reason = None):
 
@@ -46,7 +46,7 @@ class UserManagement_Module(commands.Cog):
 
 
     #Kick module. Also pretty self-explanitory
-    @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", help = "[kick @user reason]", brief = "KICK PEOPLE")
+    @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", brief = "KICK PEOPLE")
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user_name: discord.Member, *, reason = None):
         #Open our DB
@@ -81,7 +81,7 @@ class UserManagement_Module(commands.Cog):
 
 
     #Strike module. Gives strikes. Can only be used by people who are allowed to ban
-    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At three strikes, the user is banned from the server.", help = "[strike @user reason]", brief = "GIVE PEOPLE STRIKES")
+    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At 3 strikes, the user is banned from the server.", brief = "GIVE PEOPLE STRIKES")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def strike(self, ctx, user_name: discord.Member, reason = None):
 

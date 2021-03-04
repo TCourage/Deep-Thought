@@ -13,7 +13,7 @@ class Database_Module(commands.Cog):
         self.bot = bot
 
     #The update command. This handles when the user runs '|setup' or another alias and updates everything
-    @commands.command(name="setup", aliases=["setupdb", "dbupdate", "update", "updatedb"], pass_context=True, description = "Manually update the server's database, MUST be run at first launch. Also a good idea if the server has been offline for some time. Otherwise, the server will automatically update as soon as someone new joins.", help = "[setup, update, updatedb, dbupdate, setupdb]", brief = "Manually update the database")
+    @commands.command(name="setup", aliases=["setupdb", "dbupdate", "update", "updatedb"], pass_context=True, description = "Manually update the server's database, MUST be run at first launch. Also a good idea if the server has been offline for some time. Otherwise, the server will automatically update as soon as someone new joins.", brief = "Manually update the database")
     @commands.has_permissions(administrator=True)
     async def setupdb(self, ctx):
         adds = 0
