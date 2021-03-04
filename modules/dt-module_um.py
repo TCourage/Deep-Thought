@@ -194,20 +194,32 @@ class UserManagement_Module(commands.Cog):
             c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets their number of strikes
             num_strikes = c.fetchone()  #fetches the SQL row
             strikes = num_strikes[0] #create a variable to hold the number of strikes
-            await ctx.send(f"Hey {user_name.mention}, you have {strikes} strikes.")
+            if strikes != 1:
+                await ctx.send(f"Hey {user_name.mention}, you have {strikes} strikes.")
+            else:
+                await ctx.send(f"Hey {user_name.mention}, you have {strikes} strike.")
         elif user_name == None: #Again, checks your own
             c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (ctx.message.author.id,)) #Gets their number of strikes
             num_strikes = c.fetchone()  #fetches the SQL row
             strikes = num_strikes[0] #create a variable to hold the number of strikes
-            await ctx.send(f"Hey {ctx.message.author.mention}, you have {strikes} strikes.")
+            if strikes != 1:
+                await ctx.send(f"Hey {ctx.message.author.mention}, you have {strikes} strikes.")
+            else:
+                await ctx.send(f"Hey {ctx.message.author.mention}, you have {strikes} strike.")
         else:
             c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets their number of strikes
             num_strikes = c.fetchone()  #fetches the SQL row
             strikes = num_strikes[0] #create a variable to hold the number of strikes
             if not (user_name.nick):
-                await ctx.send(f"{user_name.name} has {strikes} strikes.")
+                if strikes != 1:
+                    await ctx.send(f"{user_name.nick} has {strikes} strikes.")
+                else:
+                    await ctx.send(f"{user_name.nick} has {strikes} strike.")
             else:
-                await ctx.send(f"{user_name.nick} has {strikes} strikes.")
+                if strikes != 1:
+                    await ctx.send(f"{user_name.nick} has {strikes} strikes.")
+                else:
+                    await ctx.send(f"{user_name.nick} has {strikes} strike.")
                 
 
 def setup(bot):
