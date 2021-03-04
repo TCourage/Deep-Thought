@@ -177,7 +177,7 @@ class UserManagement_Module(commands.Cog):
 
     #If the user doesn't have the permissions to ban people, they're told they can't give strikes either
     @strike.error
-    async def strike_error(self, ctx, error):
+    async def removestrike_error(self, ctx, error):
         if isinstance(error, CheckFailure):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
