@@ -17,7 +17,7 @@ class UserManagement_Module(commands.Cog):
         self.bot = bot
 
     #Ban module. Code is pretty self-explanitory
-    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", brief = "BAN PEOPLE")
+    @commands.command(name = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", brief = "BAN PEOPLE")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def ban(self, ctx, user_name: discord.Member = None, *, reason = None):
 
