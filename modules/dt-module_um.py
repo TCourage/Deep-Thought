@@ -17,9 +17,9 @@ class UserManagement_Module(commands.Cog):
         self.bot = bot
 
     #Ban module. Code is pretty self-explanitory
-    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", help = "[ban @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "BAN PEOPLE")
+    @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", help = "[ban @user reason]", brief = "BAN PEOPLE")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
-    async def ban(self, ctx, user_name: discord.Member, reason = None):
+    async def ban(self, ctx, user_name: discord.Member, *, reason = None):
 
         #All the DB part of this was moved to the DB module
         
@@ -46,10 +46,9 @@ class UserManagement_Module(commands.Cog):
 
 
     #Kick module. Also pretty self-explanitory
-    @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", help = "[kick @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "KICK PEOPLE")
+    @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", help = "[kick @user reason]", brief = "KICK PEOPLE")
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, user_name: discord.Member, reason = None):
-
+    async def kick(self, ctx, user_name: discord.Member, *, reason = None):
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
@@ -82,7 +81,7 @@ class UserManagement_Module(commands.Cog):
 
 
     #Strike module. Gives strikes. Can only be used by people who are allowed to ban
-    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At three strikes, the user is banned from the server.", help = "[strike @user \"reason\"] - Note the entire reason must be surrounded by quotation marks", brief = "GIVE PEOPLE STRIKES")
+    @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At three strikes, the user is banned from the server.", help = "[strike @user reason]", brief = "GIVE PEOPLE STRIKES")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
     async def strike(self, ctx, user_name: discord.Member, reason = None):
 
