@@ -1,4 +1,4 @@
-import discord, sys, traceback, os, asyncio, sqlite3
+import discord, sys, traceback, os, asyncio, sqlite3, datetime
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 
@@ -121,11 +121,17 @@ class Database_Module(commands.Cog):
     @commands.command(name = "checkdb", aliases = ["querydb", "searchdb", "dbsearch", "dbcheck", "dbquery"], pass_context = True, description = "Check a user's detailed info currently stored in the database.", brief = "Check the database")
     @commands.has_permissions(administrator=True)
     async def checkdb(self, ctx, member: discord.Member = None):
-        print ("test")        
-        
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
+        time = datetime.datetime.now()
+        year = time.year
+        month = time.strftime("%B")
+        day = time.day
+        hour = time.hour
+        minute = time.minute
+        second = time.second
+        print("Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
 
 
         if member == ctx.message.author:  #Check your own data
@@ -133,59 +139,62 @@ class Database_Module(commands.Cog):
             row = c.fetchone()
             print (row)
             embed=discord.Embed(title=f"Database info for {member.name}:")
-            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
-            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
-            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
-            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=True)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=True)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=True)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=True)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=True)
             c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
             row = c.fetchone()
-            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
-            if row[2] == 0:
-                embed.add_field(name="Currently banned?", value="No", inline=False)
+            embed.add_field(name="Number of Strikes", value=f"{row[1]}", inline=True)
+            embed.add_field(name="Times Kicked", value=f"{row[2]}", inline=True)
+            if row[3] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=True)
             else:
-                embed.add_field(name="Currently banned?", value="Yes", inline=False)
-            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+                embed.add_field(name="Currently banned?", value="Yes", inline=True)
+            embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
+            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
             await ctx.channel.send(embed=embed)
         elif member == None: #Also checks your own data
             member = ctx.message.author
             c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
             row = c.fetchone()
             embed=discord.Embed(title=f"Database info for {member.name}:")
-            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
-            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
-            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
-            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=True)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=True)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=True)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=True)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=True)
             c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
             row = c.fetchone()
-            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
-            if row[2] == 0:
-                embed.add_field(name="Currently banned?", value="No", inline=False)
+            embed.add_field(name="Number of Strikes", value=f"{row[1]}", inline=True)
+            embed.add_field(name="Times Kicked", value=f"{row[2]}", inline=True)
+            if row[3] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=True)
             else:
-                embed.add_field(name="Currently banned?", value="Yes", inline=False)
-            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+                embed.add_field(name="Currently banned?", value="Yes", inline=True)
+            embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
+            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
             await ctx.channel.send(embed = embed)
         else:
             c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
             row = c.fetchone()
             embed=discord.Embed(title=f"Database info for {member.name}:")
-            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=False)
-            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=False)
-            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=False)
-            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=False)
+            embed.add_field(name="Discord User ID", value=f"{row[0]}", inline=True)
+            embed.add_field(name="Discord Username", value=f"{row[1]}", inline=True)
+            embed.add_field(name="User Discriminator", value=f"{row[2]}", inline=True)
+            embed.add_field(name="Server Nickname", value=f"{row[3]}", inline=True)
+            embed.add_field(name="Server Top Role", value=f"{row[4]}", inline=True)
             c.execute('''SELECT * FROM discipline WHERE id = (?)''', (member.id,))
             row = c.fetchone()
-            embed.add_field(name="Number of Strikes", value=f"{row[0]}", inline=False)
-            embed.add_field(name="Times Kicked", value=f"{row[1]}", inline=False)
-            if row[2] == 0:
-                embed.add_field(name="Currently banned?", value="No", inline=False)
+            embed.add_field(name="Number of Strikes", value=f"{row[1]}", inline=True)
+            embed.add_field(name="Times Kicked", value=f"{row[2]}", inline=True)
+            if row[3] == 0:
+                embed.add_field(name="Currently banned?", value="No", inline=True)
             else:
-                embed.add_field(name="Currently banned?", value="Yes", inline=False)
-            embed.add_field(name="Times Banned", value=f"{row[3]}", inline=False)
+                embed.add_field(name="Currently banned?", value="Yes", inline=True)
+            embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
+            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
             await ctx.channel.send(embed = embed)
 
         #Write changes and close the DB
@@ -197,7 +206,7 @@ class Database_Module(commands.Cog):
     async def checkdb_error(self, ctx, error):
         if isinstance(error, CheckFailure):
             messageAuthor = ctx.author.mention
-            await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that. Only administrators may query the database.")
+            await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that. Only administrators may check the database.")
 
 
 
