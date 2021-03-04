@@ -140,6 +140,48 @@ class UserManagement_Module(commands.Cog):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
+    #Strike REMOVAL module. REMOVES strikes. Can only be used by people who are allowed to ban
+    @commands.command(name = "removestrike", aliases = ["removewarning"], pass_context = True, description = "Removes users strikes.", brief = "REMOVE STRIKES")
+    @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
+    async def removestrike(self, ctx, user_name: discord.Member = None):
+
+        #Open our DB
+        server_db = sqlite3.connect('users.db')
+        c = server_db.cursor()
+        
+        if user_name == ctx.message.author:  #Prevent user from removing their own strikes
+            await ctx.send("You cannot remove your own strikes")
+            return
+        elif user_name == None: #Forces you to tag someone
+            await ctx.send("Please tag someone to remove one of their strikes")
+            return
+        else: 
+            c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of strikes they've gotten before
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+
+            if strikes == 0:
+                await ctx.send(f"{user_name.mention} has no strikes! Nothing to remove!")
+            else:
+                strikes -= 1
+                c.execute('''UPDATE discipline SET strikes = (?) WHERE id = (?);''', (strikes, user_name.id,)) #apply new lower strike count
+                if strikes == 1:
+                    await ctx.send(f"{ctx.message.author} has removed a strike from {user_name.mention}! They now have {strikes} strike.")
+                else:
+                    await ctx.send(f"{ctx.message.author} has removed a strike from {user_name.mention}! They now have {strikes} strikes.")
+
+
+        #Write changes and close the DB
+        server_db.commit()
+        server_db.close()
+
+    #If the user doesn't have the permissions to ban people, they're told they can't give strikes either
+    @strike.error
+    async def strike_error(self, ctx, error):
+        if isinstance(error, CheckFailure):
+            messageAuthor = ctx.author.mention
+            await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
+
 
     @commands.command(name = "strikes", aliases = ["warns", "warnings"], pass_context = True, description = "Check how many strikes you have. At 3 strikes, you are banned from the server.", brief = "CHECK YOUR STRIKES")
     async def strikes(self, ctx, user_name: discord.Member = None, reason = None):
