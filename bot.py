@@ -26,9 +26,7 @@ print("| Please take your time to read about the project on GitHub, where you li
 print("| this software, to learn more about its operation. Have fun!                             |")
 print("|-----------------------------------------------------------------------------------------|\n")
 
-server_db = sqlite3.connect('users.db')  #Access our users database
 server_settings = sqlite3.connect('server.db')  #Access our server settings database
-c = server_db.cursor()
 s = server_settings.cursor()
 
 #Checks for databases, creates them if necessary
@@ -46,7 +44,7 @@ try:
     row = s.fetchone()
     token = row[0]
     prefix = row[1]
-    print (f"Token found! Using. Server prefix is {prefix}\n----------------------------------------")
+    print (f"Token found! Using. Server prefix is: {prefix}\n----------------------------------------")
 except:
     token = input("No token found! Please paste your bot token here: ")
     prefix = input("Please select a command prefix. Default is '!'  ")
@@ -56,17 +54,6 @@ except:
     print ("Token and prefix successfully added to DB, will attempt login\n----------------------------------------")
 
 
-print("Checking User Database status...\n")
-try:
-    c.execute('''SELECT * FROM users;''')
-    print("Using existing database\n----------------------------------------")
-except:
-    print("Creating new DB, please run the 'setup' command on the server to populate.\n----------------------------------------")
-    c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
-    c.execute('''CREATE TABLE discipline(id int, strikes int, kicks int, banned int, bans int);''')
-
-server_db.commit()
-server_db.close()
 server_settings.commit()
 server_settings.close()
 

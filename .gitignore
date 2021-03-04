@@ -1,4 +1,5 @@
 __pycache__/
+.vscode/
 token
 extra-extensions.txt
 beaver_express/

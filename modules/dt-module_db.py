@@ -11,6 +11,23 @@ from discord.ext.commands import Bot, has_permissions, CheckFailure
 ## I'm also trying to keep commands in the top section of the file, and listeners at the bottom.
 # Keeps things organized better IMO.
 
+#First let's check that the database exists. If not, create the tables.
+#Open our DB
+server_db = sqlite3.connect('users.db')
+c = server_db.cursor()
+print("Checking User Database status...\n")
+try:
+    c.execute('''SELECT * FROM users;''')
+    print("Using existing database\n----------------------------------------")
+except:
+    print("Creating new DB, please run the 'setup' command on the server to populate.\n----------------------------------------")
+    c.execute('''CREATE TABLE users(id int, name text, discriminator text, nick text, top_role text);''')
+    c.execute('''CREATE TABLE discipline(id int, strikes int, kicks int, banned int, bans int, strike1_reason text DEFAULT "None", strike1_date text DEFAULT "None", strike1_givenby text DEFAULT "None", strike2_reason text DEFAULT "None", strike2_date text DEFAULT "None", strike2_givenby text DEFAULT "None", ban_reason text DEFAULT "None", ban_date text DEFAULT "None");''')
+
+#Write changes and close the DB
+server_db.commit()
+server_db.close()
+
 class Database_Module(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -124,15 +141,8 @@ class Database_Module(commands.Cog):
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
-        time = datetime.datetime.now()
-        year = time.year
-        month = time.strftime("%B")
-        day = time.day
-        hour = time.hour
-        minute = time.minute
-        second = time.second
-        print("Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
-
+        now = datetime.datetime.now()
+        date = now.strftime("%Y %B %d, %H:%M:%S")
 
         if member == ctx.message.author:  #Check your own data
             c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
@@ -153,7 +163,7 @@ class Database_Module(commands.Cog):
             else:
                 embed.add_field(name="Currently banned?", value="Yes", inline=True)
             embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
-            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
+            embed.set_footer(text = f"Data requested: {date}, by user {ctx.message.author.name}")
             await ctx.channel.send(embed=embed)
         elif member == None: #Also checks your own data
             member = ctx.message.author
@@ -174,7 +184,7 @@ class Database_Module(commands.Cog):
             else:
                 embed.add_field(name="Currently banned?", value="Yes", inline=True)
             embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
-            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
+            embed.set_footer(text = f"Data requested: {date}, by user {ctx.message.author.name}")
             await ctx.channel.send(embed = embed)
         else:
             c.execute('''SELECT * FROM users WHERE id = (?)''', (member.id,))
@@ -194,7 +204,7 @@ class Database_Module(commands.Cog):
             else:
                 embed.add_field(name="Currently banned?", value="Yes", inline=True)
             embed.add_field(name="Times Banned", value=f"{row[4]}", inline=True)
-            embed.set_footer(text = "Data requested: {} {:0>2d} {}, {:0<2d}:{:0<2d}:{:0<2d} by user {}".format(month, day, year, hour, minute, second, ctx.message.author.name))
+            embed.set_footer(text = f"Data requested: {date}, by user {ctx.message.author.name}")
             await ctx.channel.send(embed = embed)
 
         #Write changes and close the DB
@@ -347,7 +357,7 @@ class Database_Module(commands.Cog):
         #Open our DB and edit
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
-        c.execute('''UPDATE discipline SET banned = 0 WHERE id = (?);''', (member.id,))
+        c.execute('''UPDATE discipline SET banned = 0, ban_reason = (?), ban_date = "None", strikes = 0, strike1_date = "None", strike1_reason = "None", strike1_givenby = "None", strike2_date = "None", strike2_reason = "None", strike2_givenby = "None" WHERE id = (?);''', (None, member.id,))
 
         #Write changes and close the DB
         server_db.commit()
@@ -359,12 +369,16 @@ class Database_Module(commands.Cog):
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
+        #Get current time and date for the database
+        now = datetime.datetime.now()
+        time = now.strftime("%Y %B %d, %H:%M:%S")
+        
         #Get the current number of bans of this user
         c.execute('''SELECT bans FROM discipline WHERE id = (?);''', (member.id,))
         row = c.fetchone()
         bans = row[0]
         bans += 1 #Update the number of bans, then set
-        c.execute('''UPDATE discipline SET bans = (?), banned = 1 WHERE id = (?);''', (bans, member.id,))
+        c.execute('''UPDATE discipline SET bans = (?), banned = 1, ban_date = (?) WHERE id = (?);''', (bans, time, member.id,))
 
         #Write changes and close the DB
         server_db.commit()
