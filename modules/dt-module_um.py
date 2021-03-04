@@ -19,7 +19,7 @@ class UserManagement_Module(commands.Cog):
     #Ban module. Code is pretty self-explanitory
     @commands.command(nam = "ban", pass_context = True, description = "Allows you to ban users from the server. Also updates the server database, if applicable.", brief = "BAN PEOPLE")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
-    async def ban(self, ctx, user_name: discord.Member, *, reason = None):
+    async def ban(self, ctx, user_name: discord.Member = None, *, reason = None):
 
         #All the DB part of this was moved to the DB module
         
@@ -27,7 +27,7 @@ class UserManagement_Module(commands.Cog):
             await ctx.send("You cannot ban yourself")
             return
         elif user_name == None: #Forces you to tag someone
-            await ctx.send("Please tag someone to ban")
+            await ctx.send("Please tag someone to ban them")
             return
         elif reason != None: #If a reason is given
             await ctx.send(f"{user_name.mention} is now banned, reason(s); {reason}")
@@ -48,20 +48,29 @@ class UserManagement_Module(commands.Cog):
     #Kick module. Also pretty self-explanitory
     @commands.command(name="kick", aliases=["boot", "toss"], description = "Allows you to kick users from the server. Also updates the server database, if applicable.", brief = "KICK PEOPLE")
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, user_name: discord.Member, *, reason = None):
+    async def kick(self, ctx, user_name: discord.Member = None, *, reason = None):
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
-        c.execute('''SELECT kicks FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
-        num_kicks = c.fetchone()  #fetches the SQL row
-        kicks = num_kicks[0] #create a variable to hold the number of kicks
 
-        if reason != None: #If a reason is given
+        if user_name == ctx.message.author:  #Prevent user from banning themself
+            await ctx.send("You cannot kick yourself")
+            return
+        elif user_name == None: #Forces you to tag someone
+            await ctx.send("Please tag someone to kick them")
+            return
+        elif reason != None: #If a reason is given
+            c.execute('''SELECT kicks FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
+            num_kicks = c.fetchone()  #fetches the SQL row
+            kicks = num_kicks[0] #create a variable to hold the number of kicks
             kicks += 1 #add to the kick counter
             c.execute('''UPDATE discipline SET kicks = (?) WHERE id = (?);''', (kicks, user_name.id,)) #apply kick count
             await ctx.send(f"{user_name.mention} has been kicked, reason(s); {reason}")
             await ctx.guild.kick(user_name)
         else: #If a reason is not given
+            c.execute('''SELECT kicks FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of times they've been kicked before
+            num_kicks = c.fetchone()  #fetches the SQL row
+            kicks = num_kicks[0] #create a variable to hold the number of kicks
             kicks += 1
             c.execute('''UPDATE discipline SET kicks = (?) WHERE id = (?);''', (kicks, user_name.id,))
             await ctx.send(f"{user_name} has been kicked")
@@ -83,15 +92,11 @@ class UserManagement_Module(commands.Cog):
     #Strike module. Gives strikes. Can only be used by people who are allowed to ban
     @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At 3 strikes, the user is banned from the server.", brief = "GIVE PEOPLE STRIKES")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
-    async def strike(self, ctx, user_name: discord.Member, reason = None):
+    async def strike(self, ctx, user_name: discord.Member = None, reason = None):
 
         #Open our DB
         server_db = sqlite3.connect('users.db')
         c = server_db.cursor()
-        c.execute('''SELECT strikes, bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of strikes they've gotten before
-        num_strikes = c.fetchone()  #fetches the SQL row
-        strikes = num_strikes[0] #create a variable to hold the number of strikes
-        bans = num_strikes[1] #variable to hold number of bans
         
         if user_name == ctx.message.author:  #Prevent user from giving themself strikes
             await ctx.send("You cannot give yourself strikes")
@@ -100,6 +105,10 @@ class UserManagement_Module(commands.Cog):
             await ctx.send("Please tag someone to give them a strike")
             return
         elif reason != None: #If a reason is given
+            c.execute('''SELECT strikes, bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of strikes they've gotten before
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+            bans = num_strikes[1] #variable to hold number of bans
             strikes += 1 #add to the strike counter
             if strikes == 3:
                 await ctx.send(f"{user_name.mention} has received three strikes, and is now banned. (Strike reason: {reason}")
@@ -107,8 +116,11 @@ class UserManagement_Module(commands.Cog):
             else:
                 c.execute('''UPDATE discipline SET strikes = (?) WHERE id = (?);''', (strikes, user_name.id,)) #apply strike count
                 await ctx.send(f"{user_name.mention} has been given a strike, reason(s); {reason}. This is strike #{strikes}")
-
         else: #If a reason is not given
+            c.execute('''SELECT strikes, bans FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets the number of strikes they've gotten before
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+            bans = num_strikes[1] #variable to hold number of bans
             strikes += 1 #add to the strike counter
             if strikes == 3:
                 await ctx.send(f"{user_name.mention} has received three strikes, and is now banned.")
@@ -128,6 +140,33 @@ class UserManagement_Module(commands.Cog):
             messageAuthor = ctx.author.mention
             await ctx.send(f"Sorry {messageAuthor}, you are not allowed to do that")
 
+
+    @commands.command(name = "strikes", aliases = ["warns", "warnings"], pass_context = True, description = "Check how many strikes you have. At 3 strikes, you are banned from the server.", brief = "CHECK YOUR STRIKES")
+    async def strikes(self, ctx, user_name: discord.Member = None, reason = None):
+
+        #Open our DB
+        server_db = sqlite3.connect('users.db')
+        c = server_db.cursor()
+
+        if user_name == ctx.message.author:  #Check your own strikes
+            c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets their number of strikes
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+            await ctx.send(f"Hey {user_name.mention}, you have {strikes} strikes.")
+        elif user_name == None: #Again, checks your own
+            c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (ctx.message.author.id,)) #Gets their number of strikes
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+            await ctx.send(f"Hey {ctx.message.author.mention}, you have {strikes} strikes.")
+        else:
+            c.execute('''SELECT strikes FROM discipline WHERE id = (?);''', (user_name.id,)) #Gets their number of strikes
+            num_strikes = c.fetchone()  #fetches the SQL row
+            strikes = num_strikes[0] #create a variable to hold the number of strikes
+            if not (user_name.nick):
+                await ctx.send(f"{user_name.name} has {strikes} strikes.")
+            else:
+                await ctx.send(f"{user_name.nick} has {strikes} strikes.")
+                
 
 def setup(bot):
     bot.add_cog(UserManagement_Module(bot))
