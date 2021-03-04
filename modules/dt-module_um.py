@@ -92,7 +92,7 @@ class UserManagement_Module(commands.Cog):
     #Strike module. Gives strikes. Can only be used by people who are allowed to ban
     @commands.command(name = "strike", aliases = ["warn", "warning"], pass_context = True, description = "Gives users strikes. At 3 strikes, the user is banned from the server.", brief = "GIVE PEOPLE STRIKES")
     @commands.has_permissions(ban_members=True) #This ensures only people who are allowed to ban others can use this command
-    async def strike(self, ctx, user_name: discord.Member = None, reason = None):
+    async def strike(self, ctx, user_name: discord.Member = None, *, reason = None):
 
         #Open our DB
         server_db = sqlite3.connect('users.db')
