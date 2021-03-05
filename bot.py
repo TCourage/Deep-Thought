@@ -82,8 +82,9 @@ if __name__ == "__main__":
     if initial_extensions:
         for extension in initial_extensions:
             try:
-                bot.load_extension(extension)
-                print(f"Loaded extention {extension}")
+                if extension:
+                    bot.load_extension(extension)
+                    print(f"Loaded extention {extension}")
             except Exception as e:
                 print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
@@ -94,8 +95,9 @@ if __name__ == "__main__":
     if extra_extensions:
         for extension in extra_extensions:
             try:
-                bot.load_extension(extension)
-                print(f"Loaded extention {extension}")
+                if extension:
+                    bot.load_extension(extension)
+                    print(f"Loaded extention {extension}")
             except Exception as e:
                 print(f"Failed to load extension {extension}.", file=sys.stderr)
                 traceback.print_exc()
