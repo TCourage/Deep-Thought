@@ -16,7 +16,7 @@
 ####################################################
 
 
-import discord, sys, traceback, os, sqlite3
+import discord, sys, traceback, os, re, sqlite3
 from discord.ext import commands
 from discord.ext.commands import Bot
 
@@ -57,23 +57,55 @@ except:
 server_settings.commit()
 server_settings.close()
 
-intents = discord.Intents().all()
-bot = commands.Bot(command_prefix=prefix, intents=intents)
+intents = discord.Intents().all() #This signals our intents, ensuring we can grab full access to server data
+bot = commands.Bot(command_prefix=prefix, intents=intents) 
 
 
-#Our list of extensions - now pulled from files!
-try:
-    with open('main-extensions.txt', 'r') as f:
-        initial_extensions = f.readlines()
-    initial_extensions = [x.strip() for x in initial_extensions]  #strip any unnecessary whitespace
-except FileNotFoundError:
-    initial_extensions = []
-try:
-    with open('extra-extensions.txt', 'r') as fd:
-        extra_extensions = fd.readlines()
-    extra_extensions = [x.strip() for x in extra_extensions]
-except FileNotFoundError:
-    extra_extensions = []
+
+
+
+
+####  This section pulls a list of files from the 'modules' and 'extras' directories, and
+##   now automatically tries to load any .py file in those folders as modules.
+print ("Checking for modules...\n")
+
+regex_dir = re.compile('[./]') #strip the leading directory info
+regex_file = re.compile('[.py]') #strips the file extension off
+num_extensions = 0
+initial_extensions = []
+extra_extensions = []
+
+for dirName, subdirList, fileList in os.walk("./"):  #os.walk conveniently splits files from directories, and even lists subdirectories
+    for x in fileList:  #Check all the files, dirty way of doing this probably but it works
+        dir = regex_dir.sub('', dirName)
+        fileName = x.strip('.[]')
+        fileName = regex_file.sub('', fileName)
+        if dir == 'modules':  #Check the primary modules directory
+            if ".py" in x: #Ensure we are actually loading python files
+                fileName = regex_file.sub('', fileName)
+                extension_path = dir + "." + fileName
+                initial_extensions.append(extension_path)
+                num_extensions += 1
+                print(f"Found {extension_path}, adding to extensions list.")
+            else:
+                extension_path = dir + "." + fileName
+                print(f"Error! {dir}/{fileName} is not a valid python file, and will not attempt to be loaded.")
+        if dir == 'extras':  #Check the extras folder for modules
+            if ".py" in x: #Ensure we are actually trying to load python files
+                fileName = regex_file.sub('', fileName)
+                extension_path = dir + "." + fileName
+                extra_extensions.append(extension_path)
+                num_extensions += 1
+                print(f"Found {extension_path}, adding to extensions list.")
+            else:
+                extension_path = dir + "." + fileName
+                print(f"Error! {dirName}/{fileName} is not a valid python file, and will not attempt to be loaded.")
+
+
+print (f"\nNumber of base extensions loaded: {len(initial_extensions)} - {initial_extensions}")
+print (f"Number of extra extensions loaded: {len(extra_extensions)} - {extra_extensions}")
+print ("----------------------------------------")
+
 
 
 #Load our extensions
