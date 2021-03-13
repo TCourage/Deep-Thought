@@ -70,19 +70,18 @@ bot = commands.Bot(command_prefix=prefix, intents=intents)
 print ("Checking for modules...\n")
 
 regex_dir = re.compile('[./]') #strip the leading directory info
-regex_file = re.compile('[.py]') #strips the file extension off
+regex_file = re.compile('[\b.py\b]') #strips the file extension off
 num_extensions = 0
 initial_extensions = []
 extra_extensions = []
 
 for dirName, subdirList, fileList in os.walk("./"):  #os.walk conveniently splits files from directories, and even lists subdirectories
     for x in fileList:  #Check all the files, dirty way of doing this probably but it works
-        dir = regex_dir.sub('', dirName)
+        dir = dirName.replace("./", "")
         fileName = x.strip('.[]')
-        fileName = regex_file.sub('', fileName)
         if dir == 'modules':  #Check the primary modules directory
             if ".py" in x: #Ensure we are actually loading python files
-                fileName = regex_file.sub('', fileName)
+                fileName = fileName.replace(".py", "")
                 extension_path = dir + "." + fileName
                 initial_extensions.append(extension_path)
                 num_extensions += 1
@@ -92,7 +91,7 @@ for dirName, subdirList, fileList in os.walk("./"):  #os.walk conveniently split
                 print(f"Error! {dir}/{fileName} is not a valid python file, and will not attempt to be loaded.")
         if dir == 'extras':  #Check the extras folder for modules
             if ".py" in x: #Ensure we are actually trying to load python files
-                fileName = regex_file.sub('', fileName)
+                fileName = fileName.replace(".py", "")
                 extension_path = dir + "." + fileName
                 extra_extensions.append(extension_path)
                 num_extensions += 1
@@ -105,7 +104,6 @@ for dirName, subdirList, fileList in os.walk("./"):  #os.walk conveniently split
 print (f"\nNumber of base extensions loaded: {len(initial_extensions)} - {initial_extensions}")
 print (f"Number of extra extensions loaded: {len(extra_extensions)} - {extra_extensions}")
 print ("----------------------------------------")
-
 
 
 #Load our extensions
