@@ -28,6 +28,7 @@ class MineCraft_Module(commands.Cog):
         except:
             embed = discord.Embed(title = "Error!")
             embed.add_field(name = "No server found in database, or there was an error getting data", value = "Please run `minecraft_server [address]` to set your server's details (must have Discord server admin priviliges)")
+            c.execute('''CREATE TABLE minecraft(server_address text, op1 text DEFAULT "None", op2 text DEFAULT "None", op0 text DEFAULT "None", op3 text DEFAULT "None", op4 text DEFAULT "None", op5 text DEFAULT "None");''') 
             await ctx.channel.send (embed = embed)
 
         try:
