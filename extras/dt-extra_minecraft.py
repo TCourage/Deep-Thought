@@ -35,9 +35,10 @@ class MineCraft_Module(commands.Cog):
                 ping = server.ping()
                 ping = math.trunc(ping)
                 players = []
-                for i in status.players.sample:
-                    players.append(i.name)
-                player_list = "\n".join(players)
+                if status.players.online != 0:
+                    for i in status.players.sample:
+                        players.append(i.name)
+                    player_list = "\n".join(players)
 
                 if status.players.online != 0:
                     embed = discord.Embed(title="Minecraft Server Status:", color = 0x00ff00)
