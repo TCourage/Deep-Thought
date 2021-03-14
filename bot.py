@@ -85,24 +85,24 @@ for dirName, subdirList, fileList in os.walk("./"):  #os.walk conveniently split
                 extension_path = dir + "." + fileName
                 initial_extensions.append(extension_path)
                 num_extensions += 1
-                print(f"Found {extension_path}, adding to extensions list.")
+                print(f"Found {extension_path}, adding to extensions list...")
             else:
                 extension_path = dir + "." + fileName
-                print(f"Error! {dir}/{fileName} is not a valid python file, and will not attempt to be loaded.")
+                print(f"Error! {dir}/{fileName} is not a valid python file, and will not attempt to be loaded!")
         if dir == 'extras':  #Check the extras folder for modules
             if ".py" in x: #Ensure we are actually trying to load python files
                 fileName = fileName.replace(".py", "")
                 extension_path = dir + "." + fileName
                 extra_extensions.append(extension_path)
                 num_extensions += 1
-                print(f"Found {extension_path}, adding to extensions list.")
+                print(f"Found {extension_path}, adding to extensions list...")
             else:
                 extension_path = dir + "." + fileName
-                print(f"Error! {dirName}/{fileName} is not a valid python file, and will not attempt to be loaded.")
+                print(f"Error! {dirName}/{fileName} is not a valid python file, and will not attempt to be loaded!")
 
 
-print (f"\nNumber of base extensions loaded: {len(initial_extensions)} - {initial_extensions}")
-print (f"Number of extra extensions loaded: {len(extra_extensions)} - {extra_extensions}")
+print (f"\nNumber of base extensions loaded: {len(initial_extensions)}")
+print (f"Number of extra extensions loaded: {len(extra_extensions)}")
 print ("----------------------------------------")
 
 
