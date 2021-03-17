@@ -6,19 +6,28 @@ Deep Thought is exactly what the subtitle suggests - it's a modular, self-hosted
 
 ### Dependencies
 
+#### Main bot and extensions (mandatory)
+
 1. [Discord.py](https://discordpy.readthedocs.io/en/latest/)
+
+#### Extra extensions (optional, remove modules from `extras/` folder)
+
+1. dt-extra_minecraft - [MCStatus](https://github.com/Dinnerbone/mcstatus)
 
 ### Installation and Execution
 
 Getting started with Deep Thought;
 
-1. You must be either the server owner, or an administrator to add the bot to the server.
-1. You will need to setup a new [Discord Bot Application](https://discord.com/developers/applications). Your bot will require Admin privileges to operate properly.
-1. To ensure the database works correctly, please ensure you enable both Presence Intent and Server Members Intents under the `bot` tab.
-1. Once your bot is created, you will want to navigate to the OAuth2 tab and get an invite link, set the Scopes to `bot` and Permissions to `Administrator`, copy the link, paste in a new tab, and add your bot to the server of your choice.
-1. Next go back to the Bot tab, and under the Username, click to reveal your token, and keep note of it (but keep it safe and secret!).
-1. Now you can clone this git repository. On first launch you will be prompted to enter the token you obtained in the previous step, then a command prefix. The prefix is whatever you want to use to "signal" the bot to listen to your command (i.e. if you want to run Deep Thought commands like `?kick` or `#ban` you would enter `?` or `#` at this step). Default is `!`.
-1. With the token in place, you can now run `python3 bot.py` in the root of the directory. The bot will load any extensions, and log in. To verify the bot is working simply run `prefix+help` in your server and you should receive a response.
+1. You must be either the server owner, or a server administrator, to add the bot to the server.
+1. Ensure the above dependencies are met, then clone this repo.
+1. You will need to setup a new [Discord Bot Application](https://discord.com/developers/applications).
+1. Go to the `Bot` tab and select `Add New`. Enter a username (and image if desired), and enable both Presence Intent and Server Members Intent. Under `Bot Permissions` ensure `Administrator` is selected.
+1. Click to reveal your token, and copy it. It is recommended you save this token in a secure location.
+1. Run the program using `python3 bot.py`. When prompted paste your token and press Return, then enter your preferred prefix (default is `!`). The bot should now load extensions and log in.
+1. Go to the `OAuth2` tab, under `Scopes` select `bot` and under `Bot Permissions` select `Administrator`. Copy the link and paste it in a new tab to invite the bot to your server.
+1. To verify the bot is working simply run `!help` in your server and it should return a list of loaded modules.
+1. To finish setup, run `!setup` on your server. This will create and populate the databases. **FAILURE TO PERFORM THIS STEP MAY CAUSE THE BOT TO FAIL!**
+1. Note the token and prefix are not required to be entered when the bot is restarted. To reset either of these values, delete `server.db`, and you will be asked to provide those details on next launch.
 
 #### Note for macOS Users
 
