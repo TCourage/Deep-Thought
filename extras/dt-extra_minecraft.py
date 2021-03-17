@@ -38,34 +38,33 @@ class MineCraft_Module(commands.Cog):
                 if status.players.online != 0:
                     for i in status.players.sample:
                         players.append(i.name)
-                    player_list = "`"
                     player_list = "`\n`".join(players)
 
                 if status.players.online != 0:
                     embed = discord.Embed(title="Minecraft Server Status:", color = 0x00ff00)
                     embed.add_field(name = "Server Address:", value = f"`{server_address}`", inline = False)
-                    embed.add_field(name = "Online Status:", value = "Online", inline = False)
-                    embed.add_field(name = "Minecraft Version:", value = f"{status.version.name}", inline = False)
-                    embed.add_field(name = "Ping:", value = f"{ping} ms", inline = False)
-                    embed.add_field(name = f"Playing now ({status.players.online}/{status.players.max}):", value = f"{player_list}", inline = False)
+                    embed.add_field(name = "Online Status:", value = "`Online`", inline = False)
+                    embed.add_field(name = "Minecraft Version:", value = f"`{status.version.name}`", inline = False)
+                    embed.add_field(name = "Ping:", value = f"`{ping} ms`", inline = False)
+                    embed.add_field(name = f"Playing now ({status.players.online}/{status.players.max}):", value = f"`{player_list}`", inline = False)
                     await ctx.channel.send(embed=embed)
                 else:
                     embed = discord.Embed(title="Minecraft Server Status:", color = 0x00ff00)
                     embed.add_field(name = "Server Address:", value = f"`{server_address}`", inline = False)
-                    embed.add_field(name = "Online Status:", value = "Online", inline = False)
-                    embed.add_field(name = "Minecraft Version:", value = f"{status.version.name}", inline = False)
-                    embed.add_field(name = "Ping:", value = f"{ping} ms", inline = False)
-                    embed.add_field(name = f"Playing now ({status.players.online}/{status.players.max}):", value = "Nobody playing!", inline = False)
+                    embed.add_field(name = "Online Status:", value = "`Online`", inline = False)
+                    embed.add_field(name = "Minecraft Version:", value = f"`{status.version.name}`", inline = False)
+                    embed.add_field(name = "Ping:", value = f"`{ping} ms`", inline = False)
+                    embed.add_field(name = f"Playing now ({status.players.online}/{status.players.max}):", value = "`None`", inline = False)
                     await ctx.channel.send(embed=embed)
                     
 
             except:
                 embed = discord.Embed(title="Minecraft Server Status:", color = 0xff0000)
                 embed.add_field(name = "Server Address:", value = f"`{server_address}`", inline = False)
-                embed.add_field(name = "Status:", value = "Offline", inline = False)
-                embed.add_field(name = "Minecraft Version", value = "N/A", inline = False)
-                embed.add_field(name = "Ping:", value = "N/A", inline = False)
-                embed.add_field(name = f"Playing now (0/0):", value = "None", inline = False)
+                embed.add_field(name = "Status:", value = "`Offline`", inline = False)
+                embed.add_field(name = "Minecraft Version", value = "`N/A`", inline = False)
+                embed.add_field(name = "Ping:", value = "`N/A`", inline = False)
+                embed.add_field(name = f"Playing now (0/0):", value = "`None`", inline = False)
                 await ctx.channel.send(embed=embed)
 
         elif args == "whitelist":
