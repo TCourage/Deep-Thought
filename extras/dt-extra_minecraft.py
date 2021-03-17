@@ -4,11 +4,15 @@ from discord.ext import commands
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 from mcstatus import MinecraftServer
 
-'''
-Our Dice rolling module
-
-Currently allows for up to 99 virutal dice of any size to be rolled
-'''
+#####################################################
+#  Minecraft module. This is optional. Allows       #
+#  Discord server admins to set a Minecraft server  #
+#  (which saves to the users database), and allows  #
+#  users to check the server's status (among other  #
+#  details).                                        #
+#                                                   #
+# Version 1.0.1                                     #
+#####################################################
 
 class MineCraft_Module(commands.Cog):
     def __init__(self, bot):

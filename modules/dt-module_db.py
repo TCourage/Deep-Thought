@@ -11,6 +11,8 @@ from discord.ext.commands import Bot, has_permissions, CheckFailure
 ## I'm also trying to keep commands in the top section of the file, and listeners at the bottom.
 # Keeps things organized better IMO.
 
+## Version 1.0
+
 #First let's check that the database exists. If not, create the tables.
 #Open our DB
 server_db = sqlite3.connect('users.db')

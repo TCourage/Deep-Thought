@@ -4,6 +4,8 @@
 ## vital part of Deep Thought and  ##
 ## should only be edited if you    ##
 ## what you are doing.             ##
+##                                 ##
+## Ver. 1.0.0                      ##
 #####################################
 
 

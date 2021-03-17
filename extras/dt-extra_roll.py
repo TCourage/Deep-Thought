@@ -7,6 +7,10 @@ from discord.ext.commands import Bot
 Our Dice rolling module
 
 Currently allows for up to 99 virutal dice of any size to be rolled
+
+Now allows coinflips!
+
+Version 1.1.0
 '''
 
 class Dice_Coin_Module(commands.Cog):
