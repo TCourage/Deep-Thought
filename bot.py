@@ -20,11 +20,12 @@ import discord, sys, traceback, os, re, sqlite3
 from discord.ext import commands
 from discord.ext.commands import Bot
 
-print("|-----------------------------------------------------------------------------------------|")
-print("| Welcome to Deep Thought! The modular, self-hosted, open-source Discord bot alternative. |")
-print("| Please take your time to read about the project on GitHub, where you likely downloaded  |")
-print("| this software, to learn more about its operation. Have fun!                             |")
-print("|-----------------------------------------------------------------------------------------|\n")
+print("|-------------------------------------------------------------------------------|")
+print("| Welcome to Deep Thought! The modular, self-hosted, open-source Discord bot    |")
+print("| alternative. Please take your time to read about the project on GitHub, where |")
+print("| you likely downloaded this software, to learn more about its operation.       |")
+print("|                                   Have fun!                                   |")
+print("|-------------------------------------------------------------------------------|\n")
 
 server_settings = sqlite3.connect('server.db')  #Access our server settings database
 s = server_settings.cursor()
